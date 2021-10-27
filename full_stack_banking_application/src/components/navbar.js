@@ -32,7 +32,7 @@ function NavBar() {
                 className="btn btn-outline-primary"
                 type="button"
                 aria-current="page"
-                href="#/CreateAccount/"
+                href="#/createaccount/"
                 data-toggle="tooltip"
                 data-placement="bottom"
                 title="Want to join us? Here is where you can create a new account."

@@ -2,6 +2,9 @@ import React from "react";
 import { UserContext } from "./createcontext";
 import Card from "./card";
 
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+
 function CreateAccount() {
   const [show, setShow] = React.useState(true);
   const [status, setStatus] = React.useState("");
@@ -9,7 +12,7 @@ function CreateAccount() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const ctx = React.useContext(UserContext);
+  //const ctx = React.useContext(UserContext);
 
   function validate(field, label) {
     if (!field) {
@@ -33,13 +36,44 @@ function CreateAccount() {
     return true;
   }
 
-  function handleCreate() {
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzgqUWMGJpv_KWfWhhlEbNsCi-eaC3PRk",
+    authDomain: "gregory-shaw-banking-app.firebaseapp.com",
+    projectId: "gregory-shaw-banking-app",
+    storageBucket: "gregory-shaw-banking-app.appspot.com",
+    messagingSenderId: "637460095620",
+    appId: "1:637460095620:web:a5c6e0a44d952468d218d1"
+  };
+//!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
+firebase.initializeApp(firebaseConfig);
+
+  const handleCreate = (e) => {
     if (!validate(name, "name")) return;
     if (!validate(email, "email")) return;
     if (!validatePassword(password, "password")) return;
-    ctx.users.push({ name, email, password, balance: 100 });
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    var user = userCredential.user;
+    console.log(user.email)
     setShow(false);
-  }
+  })
+  .catch((error) => {
+    console.log(e.message)
+    //setErr(e.message)
+    setStatus("Error: " + e.message)
+    setEmail('')
+    setPassword('')
+  });
+}
+
+  // function handleCreate() {
+  //   if (!validate(name, "name")) return;
+  //   if (!validate(email, "email")) return;
+  //   if (!validatePassword(password, "password")) return;
+  //   ctx.users.push({ name, email, password, balance: 100 });
+  //   setShow(false);
+  // }
 
   function clearForm() {
     setName("");
